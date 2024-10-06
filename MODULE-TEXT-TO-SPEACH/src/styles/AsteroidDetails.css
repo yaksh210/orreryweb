@@ -1,0 +1,18 @@
+/* AsteroidDetails Component Styles */
+.asteroid-details {
+    background-color: #ecf0f1;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .asteroid-details h3 {
+    margin: 0 0 10px 0;
+  }
+  
+  .asteroid-details p {
+    margin: 5px 0;
+    color: #7f8c8d;
+  }
+  

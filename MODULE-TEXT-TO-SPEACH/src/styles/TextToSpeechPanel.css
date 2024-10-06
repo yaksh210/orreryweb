@@ -1,0 +1,26 @@
+/* Text-To-Speech Panel Styles */
+.text-to-speech-panel {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    margin: 20px 0;
+  }
+  
+  .text-to-speech-panel button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    background: #e74c3c;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .text-to-speech-panel button:hover {
+    background: #c0392b;
+  }
+  

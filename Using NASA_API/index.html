@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NASA NEO Data</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    .details {
+      background-color: #f9f9f9;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>NASA Near-Earth Objects (NEOs)</h1>
+  <div id="neoDetails">
+    <!-- Data will be inserted here dynamically -->
+  </div>
+
+  <script>
+    const apiKey = 'er8xAUZpbCBTyoWgqfDbB2VfBY4DP1L5l6rxwnJo';  // Replace with your NASA API key
+    const startDate = '2024-10-01';
+    const endDate = '2024-10-06';
+    const url = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${apiKey}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const nearEarthObjects = data.near_earth_objects;
+
+        // Flatten all NEOs into one array
+        const allNEOs = Object.values(nearEarthObjects).flat();
+
+        // Display the first 10 NEOs
+        const first10NEOs = allNEOs.slice(0, 10);
+        const neoDetailsDiv = document.getElementById('neoDetails');
+        
+        first10NEOs.forEach((neo, index) => {
+          // Create a div for each NEO's details
+          const neoDiv = document.createElement('div');
+          neoDiv.classList.add('details');
+          
+          // Display the data in a structured format
+          neoDiv.innerHTML = `
+            <h2>NEO #${index + 1}: ${neo.name}</h2>
+            <p><strong>ID:</strong> ${neo.id}</p>
+            <p><strong>NASA JPL URL:</strong> <a href="${neo.nasa_jpl_url}" target="_blank">View</a></p>
+            <p><strong>Potentially Hazardous:</strong> ${neo.is_potentially_hazardous_asteroid ? 'Yes' : 'No'}</p>
+            <p><strong>Absolute Magnitude:</strong> ${neo.absolute_magnitude_h}</p>
+            <p><strong>Estimated Diameter:</strong>
+              <ul>
+                <li><strong>Kilometers:</strong> ${neo.estimated_diameter.kilometers.estimated_diameter_min.toFixed(3)} km - ${neo.estimated_diameter.kilometers.estimated_diameter_max.toFixed(3)} km</li>
+                <li><strong>Meters:</strong> ${neo.estimated_diameter.meters.estimated_diameter_min.toFixed(3)} m - ${neo.estimated_diameter.meters.estimated_diameter_max.toFixed(3)} m</li>
+                <li><strong>Miles:</strong> ${neo.estimated_diameter.miles.estimated_diameter_min.toFixed(3)} mi - ${neo.estimated_diameter.miles.estimated_diameter_max.toFixed(3)} mi</li>
+                <li><strong>Feet:</strong> ${neo.estimated_diameter.feet.estimated_diameter_min.toFixed(3)} ft - ${neo.estimated_diameter.feet.estimated_diameter_max.toFixed(3)} ft</li>
+              </ul>
+            </p>
+            <p><strong>Close Approach Data:</strong>
+              <ul>
+                ${neo.close_approach_data.map(ca => `
+                  <li>
+                    <strong>Close Approach Date:</strong> ${ca.close_approach_date}<br>
+                    <strong>Relative Velocity:</strong> ${ca.relative_velocity.kilometers_per_hour} km/h<br>
+                    <strong>Miss Distance:</strong> ${ca.miss_distance.kilometers} km<br>
+                    <strong>Orbiting Body:</strong> ${ca.orbiting_body}
+                  </li>
+                `).join('')}
+              </ul>
+            </p>
+            <p><strong>Is Sentry Object:</strong> ${neo.is_sentry_object ? 'Yes' : 'No'}</p>
+          `;
+          
+          // Append the NEO details to the main div
+          neoDetailsDiv.appendChild(neoDiv);
+        });
+      })
+      .catch(error => console.error('Error:', error));
+  </script>
+
+</body>
+</html>

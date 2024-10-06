@@ -1,0 +1,135 @@
+/* General body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background: radial-gradient(circle, #0b3d91, #1c1c1c);
+    color: #ecf0f1;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa'); /* Space background */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Header styling */
+h1, h2 {
+    margin-bottom: 20px;
+    color: #f39c12;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Page content styling */
+.page {
+    display: none;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.7);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Start page initially visible */
+#start-page {
+    display: block;
+}
+
+/* Button styles */
+button {
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    margin: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 0px 15px rgba(52, 152, 219, 0.7);
+}
+
+button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+/* Difficulty buttons layout */
+.difficulty-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+/* Quiz choices layout */
+.choices {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Choice button styles */
+.choice-btn {
+    margin: 10px;
+    padding: 15px 25px;
+    font-size: 18px;
+    background-color: #e74c3c;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 0px 10px rgba(231, 76, 60, 0.7);
+}
+
+.choice-btn:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+/* Disabled choice buttons */
+.disabled {
+    background-color: #95a5a6;
+    pointer-events: none;
+}
+
+/* Styling for the next question button */
+#next-question-btn {
+    display: none;
+    margin-top: 20px;
+    background-color: #2ecc71;
+    font-size: 18px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(46, 204, 113, 0.7);
+}
+
+#next-question-btn:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+/* Result page styling */
+#result-page {
+    background-color: rgba(44, 62, 80, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 0px 15px rgba(44, 62, 80, 0.8);
+}
+
+#result-page p {
+    font-size: 22px;
+    color: #f39c12;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Larger font for the questions */
+#question {
+    font-size: 28px;
+    color: #ecf0f1;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    margin-bottom: 20px;
+}

@@ -1,0 +1,113 @@
+/* Main container styles for detailed card (Idle State) */
+.detailed-card {
+    width: 300px; /* Adjust as needed */
+    height: 250px; /* Adjust as needed */
+    margin: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    background: transparent; /* No background */
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  /* Title and description styling for idle card */
+  .card-content {
+    padding: 10px;
+  }
+  
+  .card-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0; /* Round top corners */
+  }
+  
+  /* Hover effect for card */
+  .card-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Dark overlay for hovered content */
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Show hover content */
+  .detailed-card:hover .card-hover {
+    opacity: 1; /* Show hover content on hover */
+  }
+  
+  /* Adjust title for hover */
+  .card-hover h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  /* Adjust description for hover */
+  .card-hover p {
+    font-size: 16px;
+  }
+  
+  /* Zoomed-in state styles */
+  .detailed-card.zoomed {
+    width: 90%;
+    height: 90%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    background: #fefefe; /* Lighter background color for clicked state */
+  }
+  
+  /* Detailed view styling */
+  .detailed-view {
+    padding: 20px;
+    background: #ffffff; /* White background for detailed view */
+    border-radius: 10px;
+    width: 100%; /* Full width of parent */
+    height: auto; /* Auto height for flexibility */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Title and text color in detailed view */
+  .detailed-view h3 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .detailed-view p {
+    color: #666;
+    font-size: 16px;
+  }
+  
+  /* Button styles */
+  .text-to-speech-button,
+  .close-button {
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff; /* Primary color */
+    color: #fff;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .text-to-speech-button:hover,
+  .close-button:hover {
+    background-color: #0056b3; /* Darker shade for hover */
+  }
+  
