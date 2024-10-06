@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asteroid Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212; /* Dark background for better contrast */
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            margin-top: 100px; /* Adjusted for fixed navbar */
+            margin-bottom: 40px;
+            color: #ffffff;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1e1e1e; /* Darker navbar */
+            padding: 15px 30px; /* Increased padding for a better look */
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Shadow effect */
+        }
+
+        /* Filter option on the left */
+        .filter-option {
+            display: flex;
+            align-items: center;
+            margin-right: 20px; /* Added margin */
+        }
+
+        .filter-option select {
+            background-color: #444; /* Dark background for dropdown */
+            color: white;
+            padding: 10px; /* Increased padding */
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px; /* Added margin */
+        }
+
+        /* Search bar in the center */
+        .search-bar {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            margin: 0 20px; /* Added horizontal margin */
+        }
+
+        .search-bar input {
+            width: 50%;
+            padding: 10px; /* Increased padding */
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            background-color: #444; /* Background color */
+            color: white; /* Text color */
+        }
+
+        /* Navbar menu options on the right */
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px; /* Increased padding */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s;
+        }
+
+        .navbar-menu a:hover {
+            background-color: #1e90ff; /* Change hover color */
+        }
+
+        /* Card container for multiple cards */
+        .card-container {
+            display: flex;
+            gap: 30px; /* Added gap to avoid overlap */
+            justify-content: center; /* Center the cards */
+            margin-top: 150px; /* Add margin to compensate for fixed navbar */
+            padding: 20px; /* Added padding for aesthetics */
+            flex-wrap: wrap; /* Allow wrapping of cards */
+        }
+
+        /* Basic card styles */
+        .card {
+            width: 220px;
+            height: 320px;
+            perspective: 1000px;
+            transition: transform 0.4s ease, width 0.5s ease, height 0.5s ease;
+            position: relative;  /* Important for z-index */
+        }
+
+        /* Set z-index for hovered card */
+        .card:hover {
+            transform: scale(1.05);  /* Scale the card on hover */
+        }
+
+        /* Expanded card on click */
+        .card.expanded {
+            width: 400px;
+            height: 500px;
+        }
+
+        /* Card inner part (used for flip effect) */
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s ease;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            border-radius: 15px;
+        }
+
+        /* Card flip on hover */
+        .card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Front and back faces of the card */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Front side with image */
+        .card-front {
+            background-color: #1e90ff; /* Card color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        /* Back side with description */
+        .card-back {
+            background-color: #444; /* Back color */
+            color: #fff;
+            padding: 20px;
+            text-align: justify;  /* Justify text */
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #1e90ff, #ff6347);
+        }
+
+        /* Show short description on hover */
+        .card-back .short-info {
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Show short description on hover */
+        .card:hover .short-info {
+            display: block;
+        }
+
+        /* More info hidden until card is expanded */
+        .card-back .more-info {
+            display: none;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Show more information when card is expanded */
+        .card.expanded .card-back .more-info {
+            display: block;
+        }
+
+        /* Hide short info when expanded */
+        .card.expanded .card-back .short-info {
+            display: none;
+        }
+
+        .card-back p {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-back .short-info, .card-back .more-info {
+            font-size: 14px;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <!-- Filter option on the left -->
+        <div class="filter-option">
+            <label for="filter" style="color: white; margin-right: 5px;">Filter:</label>
+            <select id="filter" onchange="filterCards()">
+                <option value="all">All</option>
+                <option value="asteroid">Asteroids</option>
+                <option value="comet">Comets</option>
+                <option value="near-object">Near Objects</option>
+            </select>
+        </div>
+
+        <!-- Search bar in the center -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by name..." oninput="searchCards()">
+        </div>
+
+        <!-- Navbar menu options on the right -->
+        <div class="navbar-menu">
+            <a href="#">Home</a>
+            <a href="#">Asteroid</a>
+            <a href="#">Comet</a>
+            <a href="#">Near Object</a>
+            <a href="#">Resources</a>
+        </div>
+    </nav>
+
+    <div>
+        <h1>Explore Celestial Objects</h1>
+        <div class="card-container" id="cardContainer">
+            <!-- Card 1 - Asteroid -->
+            <div class="card" data-type="asteroid" onclick="toggleExpand(this, 'Asteroid Vesta', 'Vesta is one of the largest objects in the asteroid belt with a diameter of 525 kilometers.')" onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="asteroid.jpg" alt="Asteroid Vesta">
+                    </div>
+                    <div class="card-back">
+                        <p>Asteroid Vesta</p>
+                        <div class="short-info">
+                            <p>Brief: Vesta is one of the largest asteroids.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: Vesta has a diameter of about 525 kilometers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 - Asteroid -->
+            <div class="card" data-type="asteroid" onclick="toggleExpand(this, 'Asteroid Ceres', 'Ceres is the largest object in the asteroid belt and is classified as a dwarf planet.')" onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="asteroid.jpg" alt="Asteroid Ceres">
+                    </div>
+                    <div class="card-back">
+                        <p>Asteroid Ceres</p>
+                        <div class="short-info">
+                            <p>Brief: Ceres is the largest asteroid.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: Ceres has a diameter of about 940 kilometers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 - Asteroid
+            <div class="card" data-type="asteroid" onclick="toggleExpand(this, 'Asteroid Eros', 'Eros is a near-Earth asteroid that was visited by the NEAR Shoemaker spacecraft.')" onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="asteroid.jpg" alt="Asteroid Eros">
+                    </div>
+                    <div class="card-back">
+                        <p>Asteroid Eros</p>
+                        <div class="short-info">
+                            <p>Brief: Eros is a near-Earth asteroid.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: Eros has a diameter of about 16.8 kilometers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Card 4 - Comet -->
+            <div class="card" data-type="comet" onclick="toggleExpand(this, 'Comet Halley', 'Halley\'s Comet is a famous comet visible from Earth every 76 years.')" onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="comet.jpg" alt="Comet Halley">
+                    </div>
+                    <div class="card-back">
+                        <p>Comet Halley</p>
+                        <div class="short-info">
+                            <p>Brief: Halley\'s Comet is a famous comet.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: Halley last appeared in 1986 and will return in 2061.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5 - Comet -->
+            <div class="card" data-type="comet" onclick="toggleExpand(this, 'Comet NEOWISE', 'Comet NEOWISE was a bright comet visible in 2020.')" onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="comet.jpg" alt="Comet NEOWISE">
+                    </div>
+                    <div class="card-back">
+                        <p>Comet NEOWISE</p>
+                        <div class="short-info">
+                            <p>Brief: NEOWISE was visible in 2020.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: NEOWISE was discovered in March 2020.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6 - Comet
+            <div class="card" data-type="comet" onclick="toggleExpand(this, 'Comet Hale-Bopp', 'Hale-Bopp was one of the brightest comets of the 20th century.')" onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="comet.jpg" alt="Comet Hale-Bopp">
+                    </div>
+                    <div class="card-back">
+                        <p>Comet Hale-Bopp</p>
+                        <div class="short-info">
+                            <p>Brief: Hale-Bopp was very bright.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: It was visible for a record 18 months.</p>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Card 7 - Near Object -->
+            <div class="card" data-type="near-object" onclick="toggleExpand(this, 'Near-Earth Asteroid Apophis', 'Apophis is a near-Earth asteroid with a significant chance of impacting Earth in the future.')" onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="solar.jpeg" alt="Near-Earth Asteroid Apophis">
+                    </div>
+                    <div class="card-back">
+                        <p>Near-Earth Asteroid Apophis</p>
+                        <div class="short-info">
+                            <p>Brief: Apophis is a near-Earth asteroid.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: Apophis has a diameter of about 370 meters.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8 - Near Object
+            <div class="card" data-type="near-object" onclick="toggleExpand(this, 'Near-Earth Object 2012 TC4', '2012 TC4 is a small near-Earth asteroid that passed close to Earth.')"
+                onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="solar.jpeg" alt="Near-Earth Object 2012 TC4">
+                    </div>
+                    <div class="card-back">
+                        <p>Near-Earth Object 2012 TC4</p>
+                        <div class="short-info">
+                            <p>Brief: 2012 TC4 is a small near-Earth asteroid.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: It passed very close to Earth in October 2017.</p>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Card 9 - Near Object -->
+            <div class="card" data-type="near-object" onclick="toggleExpand(this, 'Near-Earth Object 1998 QP44', '1998 QP44 is an Apollo asteroid.')" onmouseover="showBrief(this)" onmouseout="resetCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <img src="solar.jpeg" alt="Near-Earth Object 1998 QP44">
+                    </div>
+                    <div class="card-back">
+                        <p>Near-Earth Object 1998 QP44</p>
+                        <div class="short-info">
+                            <p>Brief: 1998 QP44 is an Apollo asteroid.</p>
+                        </div>
+                        <div class="more-info">
+                            <p>More Info: It has an estimated diameter of 1.6 kilometers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Functions to handle card expansion, speech, etc.
+        function toggleExpand(card, name, description) {
+            const expandedCard = document.querySelector('.card.expanded');
+            if (expandedCard && expandedCard !== card) {
+                expandedCard.classList.remove('expanded'); // Collapse any expanded card
+            }
+
+            if (!card.classList.contains('expanded')) {
+                card.classList.add('expanded');
+                speak(name + ". " + description);
+            } else {
+                card.classList.remove('expanded');
+                stopSpeaking();  // Stop speech when collapsing
+            }
+        }
+
+        function showBrief(card) {
+            const brief = card.querySelector('.short-info');
+            if (brief) {
+                // No speech on hover
+            }
+        }
+
+        function resetCard(card) {
+            const brief = card.querySelector('.short-info');
+            if (brief) {
+                stopSpeaking();
+            }
+        }
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(utterance);
+        }
+
+        function stopSpeaking() {
+            speechSynthesis.cancel();
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const expandedCard = document.querySelector('.card.expanded');
+                if (expandedCard) {
+                    stopSpeaking();  // Stop audio
+                    expandedCard.classList.remove('expanded');  // Revert to small card
+                }
+            }
+        });
+
+        function filterCards() {
+            const filterValue = document.getElementById("filter").value;
+            const cards = document.querySelectorAll(".card");
+            cards.forEach(card => {
+                if (filterValue === "all" || card.getAttribute("data-type") === filterValue) {
+                    card.style.display = "block"; // Show the card
+                } else {
+                    card.style.display = "none"; // Hide the card
+                }
+            });
+            searchCards(); // Update search results
+        }
+
+        function searchCards() {
+            const searchValue = document.getElementById("searchInput").value.toLowerCase();
+            const cards = document.querySelectorAll(".card");
+            cards.forEach(card => {
+                const cardName = card.querySelector('.card-back p').textContent.toLowerCase();
+                if (cardName.includes(searchValue)) {
+                    card.style.display = "block"; // Show the card
+                } else {
+                    card.style.display = "none"; // Hide the card
+                }
+            });
+        }
+    </script>
+</body>
+</html>
